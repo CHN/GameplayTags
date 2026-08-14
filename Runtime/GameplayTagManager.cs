@@ -28,6 +28,41 @@ namespace BandoWare.GameplayTags
          return s_TagsDefinitions[runtimeIndex];
       }
 
+      /// <summary>
+      /// Gets a gameplay tag from its compact runtime index.
+      /// </summary>
+      /// <remarks>
+      /// Runtime indices are only portable between processes which registered the same set of
+      /// gameplay tags. Index zero represents <see cref="GameplayTag.None"/>.
+      /// </remarks>
+      public static GameplayTag RequestTag(int runtimeIndex, bool logWarningIfNotFound = true)
+      {
+         InitializeIfNeeded();
+
+         if ((uint)runtimeIndex >= (uint)s_TagsDefinitions.Length)
+         {
+            if (logWarningIfNotFound)
+               Debug.LogWarning($"No tag registered with runtime index \"{runtimeIndex}\".");
+
+            return GameplayTag.None;
+         }
+
+         return s_TagsDefinitions[runtimeIndex].Tag;
+      }
+
+      /// <summary>
+      /// Attempts to get a valid gameplay tag from its compact runtime index.
+      /// </summary>
+      /// <remarks>
+      /// Returns <see langword="false"/> for index zero because it represents
+      /// <see cref="GameplayTag.None"/>.
+      /// </remarks>
+      public static bool RequestTag(int runtimeIndex, out GameplayTag tag)
+      {
+         tag = RequestTag(runtimeIndex, logWarningIfNotFound: false);
+         return tag.IsValid && !tag.IsNone;
+      }
+
       public static GameplayTag RequestTag(string name, bool logWarningIfNotFound = true)
       {
          if (string.IsNullOrEmpty(name))

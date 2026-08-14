@@ -36,6 +36,22 @@ namespace BandoWare.GameplayTags.Tests
       }
 
       [Test]
+      public void RuntimeIndexRoundTripTests()
+      {
+         Assert.AreEqual(0, GameplayTag.None.RuntimeIndex);
+         Assert.AreEqual(GameplayTag.None, GameplayTagManager.RequestTag(0));
+
+         foreach (GameplayTag tag in GameplayTagManager.GetAllTags())
+         {
+            GameplayTag resolvedTag = GameplayTagManager.RequestTag(tag.RuntimeIndex);
+            Assert.AreEqual(tag, resolvedTag);
+         }
+
+         Assert.IsFalse(GameplayTagManager.RequestTag(-1, out _));
+         Assert.IsFalse(GameplayTagManager.RequestTag(int.MaxValue, out _));
+      }
+
+      [Test]
       public void IsParentTests()
       {
          GameplayTag test = "Test";

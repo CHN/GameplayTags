@@ -19,7 +19,15 @@ namespace BandoWare.GameplayTags
 
       public readonly bool IsLeaf => m_Definition != null && m_Definition.Children.Length == 0;
 
-      internal readonly int RuntimeIndex => m_Definition.RuntimeIndex;
+      /// <summary>
+      /// Gets the compact runtime index assigned to this tag.
+      /// </summary>
+      /// <remarks>
+      /// Runtime indices are only portable between processes which registered the same set of
+      /// gameplay tags. Use <see cref="GameplayTagManager.RequestTag(int, bool)"/> to resolve an
+      /// index back to a tag.
+      /// </remarks>
+      public readonly int RuntimeIndex => Definition.RuntimeIndex;
 
       internal readonly GameplayTagDefinition Definition => m_Definition ?? GameplayTagDefinition.NoneTagDefinition;
 
